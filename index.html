@@ -19,13 +19,13 @@
             </div>
             <div class="row row-block">
                 <div class="col-sm-6 main-col">
+                    <h3 class="text-center">CONTENTS</h3>
                     <div class="col-block" id="col-A">
-                        <h3>CONTENTS</h3>
                     </div>
                 </div>
                 <div class="col-sm-6 main-col">
+                    <h3 class="text-center">DETAILS</h3>
                     <div class="col-block" id="col-B">
-                        <h3>DETAILS</h3>
                     </div>
                 </div>
             </div>
@@ -34,7 +34,11 @@
                     <div class="col-block" id="col-C">
                         <h3>SEARCH</h3>
                         <p>People, Planets or Starships?</p>
-                        <input class="mb-3 text-center" type="text" id="database"></input>
+                        <select class="mb-3 text-center" id="database" name="database">
+                            <option value="people">People</option>
+                            <option value="planets">Planets</option>
+                            <option value="starships">Starships</option>
+                        </select>
                         <input type="button" id="submit" value="Compute"></input>
                     </div>
                 </div>
