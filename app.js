@@ -41,7 +41,7 @@ async function populateContents(data) {
     domElements['columnA'].appendChild(select)
     console.log(select)
     for (let i = 0; i < data.results.length; i++) {
-        html = `<option value${data.results[i].name}>${data.results[i].name}</option>`
+        html = `<option class="text-center" value${data.results[i].name}>${data.results[i].name}</option>`
         select.insertAdjacentHTML('beforeend', html)
     }
 }
