@@ -5,22 +5,29 @@ const domElements = {
     submit: document.querySelector('#submit')
 }
 
-function clearHTML() {
-    domElements['columnA'].innerHTML = ''
-    domElements['columnB'].innerHTML = ''
-}
-
 async function fetchResponse() {
     clearHTML()
     let baseURL = 'https://www.swapi.tech/api/'
     let database = String(document.querySelector('#database').value.toLowerCase())
     let response = await fetch(`${baseURL}${database}`);
     let data = await response.json();
-    console.log(data.results)
+    handle(data)
 }
 
-function populateContents() {
-    let data = fetchResponse()
+function clearHTML() {
+    domElements['columnA'].innerHTML = ''
+    domElements['columnB'].innerHTML = ''
+}
+
+function handle(response) {
+    if (response.message == 'ok') {
+        populateContents(response)
+    } else {
+        console.log('response error')
+    }
+}
+
+async function populateContents(data) {
     for (let i = 0; i < data.results.length; i++) {
         let div = document.createElement('div')
         div.innerHTML = data.results[i].name
@@ -29,5 +36,5 @@ function populateContents() {
 }
 
 domElements['submit'].addEventListener('click', e => {
-    populateContents()
+    fetchResponse()
 });
