@@ -1,4 +1,4 @@
 # star-wars-api
 Pre-work for CTD React Class
 
-This simple web page provides a fun little bit of Star Wars trivia using the [Star Wars API](https://swapi.dev/)
+This simple web page offers some interesting Star Wars factoids using the [Star Wars API](https://swapi.dev/)
