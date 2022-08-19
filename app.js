@@ -9,15 +9,14 @@ const domElements = {
 }
 
 domElements['submit'].addEventListener('click', e => {
-    initialResponse()
+    initialRequest()
 });
 
-async function initialResponse() {
+async function initialRequest() {
     clearHTML()
     let database = String(domElements['database'].value.toLowerCase())
-    console.log(database)
     let response = await fetch(`${baseURL}${database}/`);
-    handleResponse(response, database)
+    handleInitialResponse(response, database)
 }
 
 function clearHTML() {
@@ -26,9 +25,10 @@ function clearHTML() {
     
 }
 
-async function handleResponse(response, type) {
+async function handleInitialResponse(response, type) {
     if (response.status == 200) {
         let data = await response.json();
+        console.log(data)
         populateContents(data, type)
     } else {
         console.log(response.message)
@@ -44,7 +44,7 @@ async function populateContents(data, type) {
         select.insertAdjacentHTML('beforeend', html)
     }
     // add listener to select options to populate data in columnB
-    addDataListener(type)
+    secondaryRequest(type)
 }
 
 function selectAttributes(select) {
@@ -56,21 +56,28 @@ function selectAttributes(select) {
     domElements['select'] = document.querySelector('#contents')
 }
 
-function addDataListener(database) {
+function secondaryRequest(database) {
     domElements['select'].addEventListener('change', async function(e) {
         let index = e.target.value
         let response = await fetch(`${baseURL}${database}/${index}`);
-        let data = await response.json();
-        // console.log(data)
-        populateData(data)
+        handleNextResponse(response)
     } )
+}
+
+async function handleNextResponse(response) {
+    if (response.status == 200) {
+        let data = await response.json();
+        populateData(data)
+    } else {
+        console.log("Something went wrong with the request for this endpoint")
+    }
 }
 
 function populateData(data) {
     domElements['columnB'].innerHTML = ''
-    let html = `<h2 class="text-center">${data.name}</h2>`
+    let html = `<h2 class="text-center">${data.name || data.title}</h2>`
     domElements['columnB'].insertAdjacentHTML('beforeend', html)
-    let ignoredKeys = ['name', 'created_at', 'created', 'edited', 'url', 'films']
+    let ignoredKeys = ['name', 'title', 'created_at', 'created', 'edited', 'url', 'films']
     for (let key in data) {
         if (!ignoredKeys.includes(key)) {
             html = `<p class="text-center">${key}: ${data[key]}</p>`
