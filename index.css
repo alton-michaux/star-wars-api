@@ -28,6 +28,30 @@ div .row {
     height: 5%;
 }
 
+#loading {
+    color: black;
+    width: 20%;
+    height: 5%;
+    background-color: yellow;
+    position: fixed;
+    margin: auto;
+    z-index: 9999;
+    visibility: hidden;
+}
+
+#loading.display {
+    visibility: visible;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
 .main-block {
     width: 100%;
     background-color: #1e1b1b;

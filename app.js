@@ -5,7 +5,8 @@ const domElements = {
     columnB: document.querySelector('#col-B'),
     columnC: document.querySelector('#col-C'),
     database: document.querySelector('#database'),
-    submit: document.querySelector('#submit')
+    submit: document.querySelector('#submit'),
+    loader: document.querySelector('#loading')
 }
 
 domElements['submit'].addEventListener('click', e => {
@@ -14,6 +15,7 @@ domElements['submit'].addEventListener('click', e => {
 
 async function initialRequest() {
     clearHTML()
+    displayLoading()
     let database = String(domElements['database'].value.toLowerCase())
     let response = await fetch(`${baseURL}${database}/`);
     handleInitialResponse(response, database)
@@ -25,10 +27,21 @@ function clearHTML() {
     
 }
 
+function displayLoading() {
+    domElements['loader'].classList.add('display');
+    setTimeout(() => {
+        domElements['loader'].classList.remove('display');
+        } , 3000);  // 1000ms = 1s
+}
+
+function hideLoading() {
+    domElements['loader'].classList.remove('display');
+}
+
 async function handleInitialResponse(response, type) {
     if (response.status == 200) {
         let data = await response.json();
-        console.log(data)
+        hideLoading()
         populateContents(data, type)
     } else {
         console.log(response.message)
@@ -58,6 +71,7 @@ function selectAttributes(select) {
 
 function secondaryRequest(database) {
     domElements['select'].addEventListener('change', async function(e) {
+        displayLoading()
         let index = e.target.value
         let response = await fetch(`${baseURL}${database}/${index}`);
         handleNextResponse(response)
@@ -67,6 +81,7 @@ function secondaryRequest(database) {
 async function handleNextResponse(response) {
     if (response.status == 200) {
         let data = await response.json();
+        hideLoading()
         populateData(data)
     } else {
         console.log("Something went wrong with the request for this endpoint")
