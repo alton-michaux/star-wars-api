@@ -15,9 +15,9 @@ domElements['submit'].addEventListener('click', e => {
 async function initialResponse() {
     clearHTML()
     let database = String(domElements['database'].value.toLowerCase())
-    let response = await fetch(`${baseURL}${database}`);
-    let data = await response.json();
-    handle(data, database)
+    console.log(database)
+    let response = await fetch(`${baseURL}${database}/`);
+    handleResponse(response, database)
 }
 
 function clearHTML() {
@@ -26,34 +26,42 @@ function clearHTML() {
     
 }
 
-function handle(response, type) {
-    if (response) {
-        populateContents(response, type)
+async function handleResponse(response, type) {
+    if (response.status == 200) {
+        let data = await response.json();
+        populateContents(data, type)
     } else {
-        console.log(response)
+        console.log(response.message)
     }
 }
 
 async function populateContents(data, type) {
     let select = document.createElement('select')
+    selectAttributes(select)
+    // populate select with options from response
+    for (let i = 0; i < data.results.length; i++) {
+        html = `<option class="text-center option-select" label="${data.results[i].name || data.results[i].title}" value="${i + 1}">${data.results[i].name || data.results[i].title}</option>`
+        select.insertAdjacentHTML('beforeend', html)
+    }
+    // add listener to select options to populate data in columnB
+    addDataListener(type)
+}
+
+function selectAttributes(select) {
     select.setAttribute('class', 'mb-3 text-center')
     select.setAttribute('id', 'contents')
     select.setAttribute('name', 'contents')
     domElements['columnA'].appendChild(select)
+    // add select to list of DOM elements
     domElements['select'] = document.querySelector('#contents')
-    for (let i = 0; i < data.results.length; i++) {
-        html = `<option class="text-center option-select" label="${data.results[i].name}" value="${i}">${data.results[i].name}</option>`
-        select.insertAdjacentHTML('beforeend', html)
-    }
-    addDataListener(type)
 }
 
 function addDataListener(database) {
-    domElements['select'].addEventListener('change', async function() {
-        let index = domElements['select'].value
+    domElements['select'].addEventListener('change', async function(e) {
+        let index = e.target.value
         let response = await fetch(`${baseURL}${database}/${index}`);
         let data = await response.json();
-        console.log(data)
+        // console.log(data)
         populateData(data)
     } )
 }
@@ -62,7 +70,7 @@ function populateData(data) {
     domElements['columnB'].innerHTML = ''
     let html = `<h2 class="text-center">${data.name}</h2>`
     domElements['columnB'].insertAdjacentHTML('beforeend', html)
-    let ignoredKeys = ['name', 'created_at', 'edited', 'url']
+    let ignoredKeys = ['name', 'created_at', 'created', 'edited', 'url', 'films']
     for (let key in data) {
         if (!ignoredKeys.includes(key)) {
             html = `<p class="text-center">${key}: ${data[key]}</p>`
