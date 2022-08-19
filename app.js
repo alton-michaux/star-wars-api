@@ -54,6 +54,19 @@ function addDataListener(database) {
         let response = await fetch(`${baseURL}${database}/${index}`);
         let data = await response.json();
         console.log(data)
-        // populateData(data)
+        populateData(data)
     } )
+}
+
+function populateData(data) {
+    domElements['columnB'].innerHTML = ''
+    let html = `<h2 class="text-center">${data.name}</h2>`
+    domElements['columnB'].insertAdjacentHTML('beforeend', html)
+    let ignoredKeys = ['name', 'created_at', 'edited', 'url']
+    for (let key in data) {
+        if (!ignoredKeys.includes(key)) {
+            html = `<p class="text-center">${key}: ${data[key]}</p>`
+            domElements['columnB'].insertAdjacentHTML('beforeend', html)
+        }
+    }
 }
