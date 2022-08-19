@@ -17,8 +17,31 @@ async function initialRequest() {
     clearHTML()
     displayLoading()
     let database = String(domElements['database'].value.toLowerCase())
-    let response = await fetch(`${baseURL}${database}/`);
-    handleInitialResponse(response, database)
+    await fetch(`${baseURL}${database}/`)
+        .then(response => response.json())
+        .then(json => {
+            hideLoading()
+            populateContents(json, database)
+        }).catch (error => {
+            displayError(error)
+            console.log(error)
+        } )
+}
+
+function secondaryRequest(database) {
+    domElements['select'].addEventListener('change', async function(e) {
+        displayLoading()
+        let index = e.target.value
+        await fetch(`${baseURL}${database}/${index}`)
+            .then(response => response.json())
+            .then(json => {
+                hideLoading()
+                populateData(json)
+            }).catch (error => {
+                displayError(error)
+                console.log(error)
+            } )
+    } )
 }
 
 function clearHTML() {
@@ -38,17 +61,16 @@ function hideLoading() {
     domElements['loader'].classList.remove('display');
 }
 
-async function handleInitialResponse(response, type) {
-    if (response.status == 200) {
-        let data = await response.json();
-        hideLoading()
-        populateContents(data, type)
-    } else {
-        console.log(response.message)
-    }
+function displayError(error) {
+    domElements['loader'].style.backgroundColor = 'red'
+    domElement['loader'].innerHTML = `Error:${error}`
+    domElements['loader'].classList.add('display');
+    setTimeout(() => {
+        domElements['loader'].classList.remove('display');
+        } , 5000);  // 1000ms = 1s
 }
 
-async function populateContents(data, type) {
+function populateContents(data, type) {
     let select = document.createElement('select')
     selectAttributes(select)
     // populate select with options from response
@@ -67,25 +89,6 @@ function selectAttributes(select) {
     domElements['columnA'].appendChild(select)
     // add select to list of DOM elements
     domElements['select'] = document.querySelector('#contents')
-}
-
-function secondaryRequest(database) {
-    domElements['select'].addEventListener('change', async function(e) {
-        displayLoading()
-        let index = e.target.value
-        let response = await fetch(`${baseURL}${database}/${index}`);
-        handleNextResponse(response)
-    } )
-}
-
-async function handleNextResponse(response) {
-    if (response.status == 200) {
-        let data = await response.json();
-        hideLoading()
-        populateData(data)
-    } else {
-        console.log("Something went wrong with the request for this endpoint")
-    }
 }
 
 function populateData(data) {
