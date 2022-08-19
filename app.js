@@ -77,11 +77,15 @@ function populateData(data) {
     domElements['columnB'].innerHTML = ''
     let html = `<h2 class="text-center">${data.name || data.title}</h2>`
     domElements['columnB'].insertAdjacentHTML('beforeend', html)
-    let ignoredKeys = ['name', 'title', 'created_at', 'created', 'edited', 'url', 'films']
+    let ignoredKeys = ['name', 'title', 'created_at', 'created', 'edited', 'url']
     for (let key in data) {
         if (!ignoredKeys.includes(key)) {
-            html = `<p class="text-center data-block">${key}: ${data[key]}</p>`
+            html = `<h4 style="color:yellow;">${capitalize(key)}:</h4><div class="text-center data-block">${data[key]}</div>`
             domElements['columnB'].insertAdjacentHTML('beforeend', html)
         }
     }
+}
+
+function capitalize(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1)
 }
