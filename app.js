@@ -1,6 +1,6 @@
 const baseURL = 'https://swapi.dev/api/'
 
-const domElements = {
+const domElements = { // add DOM elements to global object
     columnA: document.querySelector('#col-A'),
     columnB: document.querySelector('#col-B'),
     columnC: document.querySelector('#col-C'),
@@ -14,22 +14,27 @@ domElements['submit'].addEventListener('click', e => {
 });
 
 async function initialRequest() {
-    clearHTML()
-    displayLoading()
-    let database = String(domElements['database'].value.toLowerCase())
+    clearHTML() // clear previous data
+    displayLoading() // display loading message
+    let database = String(domElements['database'].value.toLowerCase()) // get database name from dropdown menu
     await fetch(`${baseURL}${database}/`)
-        .then(response => response.json())
+        .then((response) => {
+            if (response.ok) {
+                return response.json()
+            }
+            displayError(response.status)
+        })
         .then(json => {
             hideLoading()
-            populateContents(json, database)
+            populateContents(json, database) // populate contents of columnA
         }).catch (error => {
             displayError(error)
             console.log(error)
         } )
 }
 
-function secondaryRequest(database) {
-    domElements['select'].addEventListener('change', async function(e) {
+function selectListener(database) {
+    domElements['select'].addEventListener('change', async function(e) { // add listener to select options
         displayLoading()
         let index = e.target.value
         await fetch(`${baseURL}${database}/${index}`)
@@ -41,7 +46,7 @@ function secondaryRequest(database) {
             })
             .then(json => {
                 hideLoading()
-                populateData(json)
+                populateData(json) // populate data in columnB
             }).catch (error => {
                 displayError(error)
                 console.log(error)
@@ -84,13 +89,11 @@ function displayError(error) {
 function populateContents(data, type) {
     let select = document.createElement('select')
     selectAttributes(select)
-    // populate select with options from response
-    for (let i = 0; i < data.results.length; i++) {
+    for (let i = 0; i < data.results.length; i++) { // loop through results and populate select with options from response
         html = `<option class="text-center option-select" label="${data.results[i].name || data.results[i].title}" value="${i + 1}">${data.results[i].name || data.results[i].title}</option>`
         select.insertAdjacentHTML('beforeend', html)
     }
-    // add listener to select options to populate data in columnB
-    secondaryRequest(type)
+    selectListener(type) 
 }
 
 function selectAttributes(select) {
