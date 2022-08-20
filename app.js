@@ -23,26 +23,24 @@ function selectListener(database) {
 
 async function fetchResponse(database, index="") {
 	displayLoading()
-		await fetch(`${baseURL}/${database}/${index}`)
-			.then((response) => {
-				if (response.ok) {
-					console.log(response.json)
-					return response.json()
-				}
-				displayError(response.status)
-			})
-			.then(json => {
-				if (index == "") {
-					hideLoading()
-					populateContents(json, database)
-				} else {
-					hideLoading()
-					populateData(json) // populate data in columnB
-				}
-			}).catch (error => {
-					displayError(error)
-					console.log(error)
-			} )
+	await fetch(`${baseURL}/${database}/${index}`)
+		.then((response) => {
+			if (response.ok) {
+				return response.json()
+			}
+			displayError(response.status)
+		})
+		.then(json => {
+			if (index == "") {
+				hideLoading()
+				populateContents(json, database)
+			} else {
+				hideLoading()
+				populateData(json) // populate data in columnB
+			}
+		}).catch (error => {
+				displayError(error)
+		} )
 }
 
 function clearHTML() {
@@ -87,7 +85,7 @@ function populateContents(data, type) {
 	selectListener(type) 
 }
 
-function selectAttributes(select) {
+function selectAttributes(select) { // set attributes for select menu
 	select.setAttribute('class', 'mb-3 text-center')
 	select.setAttribute('id', 'contents')
 	select.setAttribute('name', 'contents')
@@ -97,7 +95,7 @@ function selectAttributes(select) {
 	createSelectedOption()
 }
 
-function createSelectedOption() {
+function createSelectedOption() { // create selected option for select menu
 	let selected = document.createElement('option')
 	selected.setAttribute('value', '0')
 	selected.setAttribute('selected', 'selected')
@@ -112,8 +110,8 @@ function populateData(data) {
 	let ignoredKeys = ['name', 'title', 'created_at', 'created', 'edited', 'url'] //ignore these keys
 	let linkedKeys = ['homeworld', 'species', 'starships', 'vehicles', 'films', 'characters', 'planets', 'people'] //keys that have a link to another page
 	for (let key in data) {
-		if (!ignoredKeys.includes(key)) {
-			if (linkedKeys.includes(key.toLowerCase())) {
+		if (!ignoredKeys.includes(key)) { // if key is not in ignoredKeys array push to html
+			if (linkedKeys.includes(key.toLowerCase())) { // if key is in linkedKeys array, create link to another page
 				let html = `<h4 style="color:yellow;">${capitalize(key.replace("_", " "))}</h4>`
 				html +=`<div class="text-center data-block"><a href="${data[key]}" target="_blank" style="color:white;">${data[key]}</a></div>`
 				domElements['columnB'].insertAdjacentHTML('beforeend', html)
