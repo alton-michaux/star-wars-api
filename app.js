@@ -37,7 +37,7 @@ function secondaryRequest(database) {
                 if (response.ok) {
                     return response.json()
                 }
-                displayError(response.statusText)
+                displayError(response.status)
             })
             .then(json => {
                 hideLoading()
@@ -57,6 +57,8 @@ function clearHTML() {
 
 function displayLoading() {
     domElements['loader'].style.backgroundColor = 'yellow'
+    domElements['loader'].style.color = 'black'
+    domElements['loader'].innerHTML = "LOADING..."
     domElements['loader'].classList.add('display');
     setTimeout(() => {
         domElements['loader'].classList.remove('display');
@@ -69,8 +71,9 @@ function hideLoading() {
 
 function displayError(error) {
     domElements['loader'].style.backgroundColor = 'red'
+    domElements['loader'].style.color = 'white'
     domElements['loader'].innerHTML = ""
-    domElements['loader'].innerHTML = "ERROR: " + error
+    domElements['loader'].innerHTML = error
     domElements['loader'].classList.add('display');
     setTimeout(() => {
         domElements['loader'].classList.remove('display');
@@ -112,11 +115,18 @@ function populateData(data) {
     domElements['columnB'].innerHTML = ''
     let html = `<h2 class="text-center">${data.name || data.title}</h2>`
     domElements['columnB'].insertAdjacentHTML('beforeend', html)
-    let ignoredKeys = ['name', 'title', 'created_at', 'created', 'edited', 'url']
+    let ignoredKeys = ['name', 'title', 'created_at', 'created', 'edited', 'url'] //ignore these keys
+    let linkedKeys = ['homeworld', 'species', 'starships', 'vehicles', 'films', 'characters', 'planets', 'people'] //keys that have a link to another page
     for (let key in data) {
         if (!ignoredKeys.includes(key)) {
-            html = `<h4 style="color:yellow;">${capitalize(key)}:</h4><div class="text-center data-block">${data[key]}</div>`
-            domElements['columnB'].insertAdjacentHTML('beforeend', html)
+            if (linkedKeys.includes(key.toLowerCase())) {
+                let html = `<div class="text-center data-block"><h4 style="color:yellow;">${capitalize(key)}</h4>`
+                html +=`<a href="${data[key]}" target="_blank">${data[key]}</a></div>`
+                domElements['columnB'].insertAdjacentHTML('beforeend', html)
+            } else {
+                html = `<div class="text-center data-block"><h4 style="color:yellow;">${capitalize(key)}:</h4>${data[key]}</div>`
+                domElements['columnB'].insertAdjacentHTML('beforeend', html)
+            }
         }
     }
 }
