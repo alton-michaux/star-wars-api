@@ -10,19 +10,19 @@ const domElements = { // add DOM elements to global object
 }
 
 domElements['submit'].addEventListener('click', e => {
-	clearHTML() // clear previous data
-	let database = String(domElements['database'].value.toLowerCase()) // get database name from dropdown menu
-	fetchResponse(database) // fetch data from selected database
+	clearHTML()
+	let database = domElements['database'].value.toLowerCase() // get database name from dropdown menu
+	fetchResponse(database)
 });
 
-function selectListener(database) {
-	domElements['select'].addEventListener('change', e => { // add listener to select options
+function selectListener(database) { // add listener to select options
+	domElements['select'].addEventListener('change', e => {
 		fetchResponse(database, e.target.value)
 	} )
 }
 
 async function fetchResponse(database, index="") {
-	displayLoading()
+	displayLoading() // display loading message
 	await fetch(`${baseURL}/${database}/${index}`)
 		.then((response) => {
 			if (response.ok) {
@@ -31,9 +31,9 @@ async function fetchResponse(database, index="") {
 			displayError(response.status)
 		})
 		.then(json => {
-			if (index == "") {
+			if (index == "") { // index is empty upon initial load
 				hideLoading()
-				populateContents(json, database)
+				populateContents(json, database) // populate data in columnA
 			} else {
 				hideLoading()
 				populateData(json) // populate data in columnB
@@ -54,12 +54,10 @@ function displayLoading() {
 	domElements['loader'].style.color = 'black'
 	domElements['loader'].innerHTML = "LOADING..."
 	domElements['loader'].classList.add('display');
-	setTimeout(() => {
-		domElements['loader'].classList.remove('display');
-		} , 3000);  // 1000ms = 1s
+	timeoutSet()
 }
 
-function hideLoading() {
+function hideLoading() { // hide loading message if no error is thrown before 5 seconds
 	domElements['loader'].classList.remove('display');
 }
 
@@ -69,10 +67,14 @@ function displayError(error) {
 	domElements['loader'].innerHTML = ""
 	domElements['loader'].innerHTML = error
 	domElements['loader'].classList.add('display');
-	setTimeout(() => {
+	timeoutSet()
+	throw new Error(error)
+}
+
+function timeoutSet() { // set timeout for loading message to disappear
+	setTimeout(() => { // remove loading message after 5 seconds
 		domElements['loader'].classList.remove('display');
 		} , 5000);  // 1000ms = 1s
-	throw new Error(error)
 }
 
 function populateContents(data, type) {
