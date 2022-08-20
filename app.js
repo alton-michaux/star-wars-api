@@ -33,7 +33,12 @@ function secondaryRequest(database) {
         displayLoading()
         let index = e.target.value
         await fetch(`${baseURL}${database}/${index}`)
-            .then(response => response.json())
+            .then((response) => {
+                if (response.ok) {
+                    return response.json()
+                }
+                displayError(response.statusText)
+            })
             .then(json => {
                 hideLoading()
                 populateData(json)
@@ -51,6 +56,7 @@ function clearHTML() {
 }
 
 function displayLoading() {
+    domElements['loader'].style.backgroundColor = 'yellow'
     domElements['loader'].classList.add('display');
     setTimeout(() => {
         domElements['loader'].classList.remove('display');
@@ -63,11 +69,13 @@ function hideLoading() {
 
 function displayError(error) {
     domElements['loader'].style.backgroundColor = 'red'
-    domElement['loader'].innerHTML = `Error:${error}`
+    domElement['loader'].innerHTML = ""
+    domElement['loader'].innerHTML = "ERROR: " + error
     domElements['loader'].classList.add('display');
     setTimeout(() => {
         domElements['loader'].classList.remove('display');
         } , 5000);  // 1000ms = 1s
+    throw new Error(error)
 }
 
 function populateContents(data, type) {
