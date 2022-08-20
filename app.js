@@ -120,11 +120,11 @@ function populateData(data) {
     for (let key in data) {
         if (!ignoredKeys.includes(key)) {
             if (linkedKeys.includes(key.toLowerCase())) {
-                let html = `<div class="text-center data-block"><h4 style="color:yellow;">${capitalize(key)}</h4>`
-                html +=`<a href="${data[key]}" target="_blank">${data[key]}</a></div>`
+                let html = `<h4 style="color:yellow;">${capitalize(key.replace("_", " "))}</h4>`
+                html +=`<div class="text-center data-block"><a href="${data[key]}" target="_blank">${data[key]}</a></div>`
                 domElements['columnB'].insertAdjacentHTML('beforeend', html)
             } else {
-                html = `<div class="text-center data-block"><h4 style="color:yellow;">${capitalize(key)}:</h4>${data[key]}</div>`
+                html = `<h4 style="color:yellow;">${capitalize(key.replace("_", " "))}:</h4><div class="text-center data-block">${data[key]}</div>`
                 domElements['columnB'].insertAdjacentHTML('beforeend', html)
             }
         }
