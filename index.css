@@ -14,7 +14,6 @@ div {
 }
 
 div .row {
-    /* border: 1px solid red; */
     margin: 1%;
 }
 
@@ -33,23 +32,15 @@ div .row {
     width: 20%;
     height: 5%;
     background-color: yellow;
-    position: fixed;
-    margin: auto;
+    position: absolute;
+    margin-top: 25%;
+    margin-bottom: 0;
     z-index: 9999;
     visibility: hidden;
 }
 
 #loading.display {
     visibility: visible;
-}
-
-@keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
 }
 
 .main-block {
@@ -67,13 +58,8 @@ div .row {
 }
 
 .main-col {
-    /* border: 1px solid green; */
     width: 100%;
 }
-
-/* .heading {
-    text-decoration: underline;
-} */
 
 .col-block {
     width: 100%;
@@ -82,7 +68,6 @@ div .row {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    /* border: 1px solid blue; */
 }
 
 .data-block {
