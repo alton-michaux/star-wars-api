@@ -69,8 +69,8 @@ function hideLoading() {
 
 function displayError(error) {
     domElements['loader'].style.backgroundColor = 'red'
-    domElement['loader'].innerHTML = ""
-    domElement['loader'].innerHTML = "ERROR: " + error
+    domElements['loader'].innerHTML = ""
+    domElements['loader'].innerHTML = "ERROR: " + error
     domElements['loader'].classList.add('display');
     setTimeout(() => {
         domElements['loader'].classList.remove('display');
