@@ -97,6 +97,15 @@ function selectAttributes(select) {
     domElements['columnA'].appendChild(select)
     // add select to list of DOM elements
     domElements['select'] = document.querySelector('#contents')
+    createSelectedOption(select)
+}
+
+function createSelectedOption(select) {
+    let selected = document.createElement('option')
+    selected.setAttribute('value', '0')
+    selected.setAttribute('selected', 'selected')
+    selected.innerHTML = 'Select an option'
+    domElements['select'].appendChild(selected)
 }
 
 function populateData(data) {
