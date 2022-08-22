@@ -109,7 +109,7 @@ function populateColumnB(data) {
 	let html = `<h2 class="text-center">${data.name || data.title}</h2>`
 	domElements['columnB'].insertAdjacentHTML('beforeend', html)
 	let ignoredKeys = ['name', 'title', 'created_at', 'created', 'edited', 'url'] // these keys won't be displayed in column C
-	let linkedKeys = ['homeworld', 'species', 'starships', 'vehicles', 'films', 'characters', 'planets', 'people'] // keys that contain links to other resources
+	let linkedKeys = ['homeworld', 'species', 'starships', 'vehicles', 'films', 'characters', 'planets', 'people', 'residents'] // keys that contain links to other resources
 	for (let key in data) {
 		if (!ignoredKeys.includes(key)) { // if key is not in ignoredKeys array push to html
 			if (linkedKeys.includes(key.toLowerCase())) {

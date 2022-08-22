@@ -16,6 +16,15 @@ nav {
     background-color: #1e1b1b;
 }
 
+footer {
+    height: 50px;
+    width: 100vw;
+    position: fixed;
+    bottom: 0;
+    background-color: #1e1b1b;
+    font-size: 8px;
+}
+
 p {
     font-size: 2em;
 }
@@ -69,6 +78,7 @@ div .row {
 
 .main-col {
     width: 100%;
+    margin-top: 0;
 }
 
 .col-block {
